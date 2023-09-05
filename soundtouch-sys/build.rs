@@ -51,7 +51,17 @@ fn main() {
         .generate()
         .expect("Failed");
 
-    println!("cargo:rustc-link-lib=SoundTouch");
+
+    println!("cargo:rustc-link-lib=static=SoundTouch");
+    
+    let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
+    if target_os == "macos" {
+        println!("cargo:rustc-link-lib=c++");
+    }
+    else if target_os != "windows" {
+        println!("cargo:rustc-link-lib=stdc++");
+    } 
+
     let out_path =
         PathBuf::from(env::var("OUT_DIR").expect("environment variable `OUT_DIR' exists"));
     bindings
